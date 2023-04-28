@@ -1,8 +1,6 @@
 import React , { useState , useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import {NFTAddr, DevWallet} from '../../../config/constants'
-
-const IPFS_BASE_URL = "https://ipfs.io/ipfs/";
+import {NFTAddr, DevWallet, IPFS_BASE_URL} from '../../../config/constants'
 
 const NFTs = props => {
 

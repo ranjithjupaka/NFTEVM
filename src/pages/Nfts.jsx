@@ -214,7 +214,6 @@ const NFTs = () => {
     }
 
     const saveAllFixedSaleList = (data) => {
-        console.log(data)
         setAllFixedSale((old) => [
             ...old, data
         ])

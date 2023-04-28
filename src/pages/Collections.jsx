@@ -3,9 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
-import {NFTAddr, DevWallet} from '../config/constants'
-
-const IPFS_BASE_URL = "https://ipfs.io/ipfs/";
+import {NFTAddr, DevWallet, IPFS_BASE_URL} from '../config/constants'
 
 const Collections = () => {
     const [chainId, setChainId] = useState();

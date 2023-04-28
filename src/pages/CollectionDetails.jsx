@@ -5,10 +5,8 @@ import 'react-tabs/style/react-tabs.css';
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
 import NftItems from '../components/layouts/nfts/NftItems';
-import {NFTAddr, DevWallet} from '../config/constants'
+import {NFTAddr, DevWallet, IPFS_BASE_URL} from '../config/constants'
 import { getGasPrice } from '../utils/utils';
-
-const IPFS_BASE_URL = "https://ipfs.io/ipfs/";
 
 const CollectionDetails = () => {
     const { colId } = useParams();
