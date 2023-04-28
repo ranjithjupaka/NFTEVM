@@ -1,5 +1,5 @@
 export const DevWallet="0x99E877887Dc1fE2Bf960FE5fe24C5C5808609F59"
-export const IPFS_BASE_URL = "https://ipfs.io/ipfs";
+export const IPFS_BASE_URL = "https://ipfs.io/ipfs/";
 export const VIDEO_TYPE = ["video/mp4", "video/mov", "video/webm"];
 export const IMAGE_TYPE = ["image/jpeg", "image/png", "image/gif", "image/svg", "image/jpg"];
 export const AUDIO_TYPE = ["audio/mpeg"];

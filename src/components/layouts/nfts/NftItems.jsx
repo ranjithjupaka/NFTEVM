@@ -1,6 +1,7 @@
 import React , { useState , useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {NFTAddr, DevWallet, IPFS_BASE_URL} from '../../../config/constants'
+import { getCanonicalPath } from '../../../utils/utils';
 
 const NFTs = props => {
 
@@ -37,7 +38,6 @@ const NFTs = props => {
         if (props.web3Api) {
             _nftContract.methods.nftinformation(id).call()
             .then((nftDetail) => {
-                console.log(' -- nft info -- ', nftDetail);
                 makeAllNftData({...nftDetail, 12:JSON.parse(nftDetail[5])[1] })
             }).catch()
         }
@@ -54,9 +54,9 @@ const NFTs = props => {
             { 
                 allNftData.map((item, idx) => {
                     return(
-                        <Link to={`/nft/${item[0]}`} className="cartProduct">
+                        <Link to={`/nft/${item[0]}`} className="cartProduct" key={idx}>
                             <div className="cartProduct__image">
-                                <img src={IPFS_BASE_URL + item[6]} alt="" />
+                                <img src={getCanonicalPath(IPFS_BASE_URL + item[6])} alt="" />
                             </div>
                             <div className="cartProduct__info">
                             <h6>

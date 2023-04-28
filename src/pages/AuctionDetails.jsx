@@ -5,7 +5,7 @@ import fromExponential from 'from-exponential';
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
 import { NFTAddr, DevWallet, IPFS_BASE_URL, VIDEO_TYPE, IMAGE_TYPE, AUDIO_TYPE } from '../config/constants'
-import { getGasPriceZk } from '../utils/utils';
+import { getCanonicalPath, getGasPriceZk } from '../utils/utils';
 
 const AuctionDetails = () => {
     const { nftid } = useParams()
@@ -176,12 +176,12 @@ const AuctionDetails = () => {
                         <div className="productDetails__inner-image">
                             {nftData && (VIDEO_TYPE.includes(JSON.parse(nftData[5])[1]) ?
                                 <video alt="" muted autoPlay loop>
-                                    <source src={IPFS_BASE_URL + nftData[6]} />
+                                    <source src={getCanonicalPath(IPFS_BASE_URL + nftData[6])} />
                                 </video> 
                                 : IMAGE_TYPE.includes(JSON.parse(nftData[5])[1]) ?
-                                <img src={IPFS_BASE_URL + nftData[6]} alt=""/>
+                                <img src={getCanonicalPath(IPFS_BASE_URL + nftData[6])} alt=""/>
                                 : AUDIO_TYPE.includes(JSON.parse(nftData[5])[1]) ?
-                                <audio style={{ width: '90%' }} src={IPFS_BASE_URL + nftData[6]} />
+                                <audio style={{ width: '90%' }} src={getCanonicalPath(IPFS_BASE_URL + nftData[6])} />
                                 : null)
                             }
                         </div>

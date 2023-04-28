@@ -6,7 +6,7 @@ import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
 import NftItems from '../components/layouts/nfts/NftItems';
 import {NFTAddr, DevWallet, IPFS_BASE_URL} from '../config/constants'
-import { getGasPrice } from '../utils/utils';
+import { getCanonicalPath, getGasPrice } from '../utils/utils';
 
 const CollectionDetails = () => {
     const { colId } = useParams();
@@ -71,7 +71,7 @@ const CollectionDetails = () => {
                     <div className="productInfo__inner">
                     <div className="productInfo__inner-image">
                         <div className="ratioImage">
-                            <img src={colData && (IPFS_BASE_URL + colData[6])} alt="" />
+                            <img src={colData && (getCanonicalPath(IPFS_BASE_URL + colData[6]))} alt="" />
                         </div>
                     </div>
                     <div className="productInfo__inner-details">

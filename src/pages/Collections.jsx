@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
 import {NFTAddr, DevWallet, IPFS_BASE_URL} from '../config/constants'
+import { getCanonicalPath } from '../utils/utils';
 
 const Collections = () => {
     const [chainId, setChainId] = useState();
@@ -108,7 +109,7 @@ const Collections = () => {
                                     <div className="cartNft" key={idx}>
                                         <Link to={`/collection/${item[0]}`}>
                                             <div className="cartNft__image">
-                                                <img src={IPFS_BASE_URL + item[6]} alt=""/>
+                                                <img src={getCanonicalPath(IPFS_BASE_URL + item[6])} alt=""/>
                                             </div>
                                             <div className="cartNft__info">
                                                 <p>{item[2]}</p>

@@ -46,5 +46,16 @@ export const getGasPrice = async () => {
             gasPriceNumber = fromExponential(parseFloat(ethers.utils.formatUnits(gasPriceInUnits, 9)) * Math.pow(10, 9));
             break;
     }
+
+    return gasPriceNumber;
+    
+};
+
+export const getCanonicalPath = (_path) => {
+
+    let tempStr = _path.substring(_path.indexOf("https://") + 8);
+    tempStr = tempStr.replace("//", "/");
+
+    return "https://" + tempStr;
     
 };
