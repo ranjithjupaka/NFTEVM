@@ -31,19 +31,29 @@ const NftDetails = () => {
     const [saleval, setSaleVal] = useState()
     const [auctionval, setAuctionValue] = useState()
     const [nftData, setNftData] = useState();
+    const [btnName, setBtnName] = useState();
+    const [mybalance, setMybalance] = useState();
+    const [listPrice, setListPrice] = useState(0);
+    const [takerFee, setTakerFee] = useState();
+    const [royalty, setRoyalty] = useState();
+    const [totalFee, setTotalFee] = useState();
 
     const navigate = useNavigate();
 
     useEffect(async () => {
-        if (chainId, web3Api) {
+        if (chainId && web3Api && currentAccount) {
             const nftContratFile = await fetch("/abis/ZkSeaNFT.json");
             const convertNftContratFileToJson = await nftContratFile.json();
             const nFTAbi = convertNftContratFileToJson;
 
             let nftContract = new web3Api.eth.Contract(nFTAbi, NFTAddr[chainId]);
             setNftContract(nftContract);
+
+            const balance = await web3Api.eth.getBalance(currentAccount);
+            setMybalance(web3Api.utils.fromWei(balance, 'ether'));
+            
         }
-    }, [chainId, web3Api])
+    }, [chainId, web3Api, currentAccount])
 
     useEffect(async () => {
         if (web3Api && nftContract) {
@@ -71,8 +81,9 @@ const NftDetails = () => {
         if (web3Api) {
             nftContract.methods.listofsalenft(id).call({ from: currentAccount })
                 .then((length) => {
-                    setBuyPrice((Number(length[3])) / 1000000000000000000)
-                    setAucBuyPrice(((Number(length[2])) / 1000000000000000000))
+                    setBuyPrice((Number(length[3])) / 1000000000000000000);
+                    setAucBuyPrice(((Number(length[2])) / 1000000000000000000));
+                    setListPrice((Number(length[3])) / 1000000000000000000);
                 })
                 .catch()
         }
@@ -81,6 +92,7 @@ const NftDetails = () => {
     const buyFixedNft = async (collectionid, tokenid, amount) => {
         if (web3Api) {
             setShow(true);
+            setBtnName("buynft");
             const gasPriceNumber = await getGasPrice();
             let amountIn = web3Api.utils.toBN(fromExponential(((parseFloat(amount)) * Math.pow(10, 18))));
 
@@ -123,13 +135,14 @@ const NftDetails = () => {
     const removeAuction = async (tokenid) => {
         if (web3Api) {
             setShow(true)
+            setBtnName("cancelauc");
 
             const gasPriceNumber = await getGasPrice();
 
             nftContract.methods.removesfromauction(tokenid).send({ from: currentAccount, gasPrice: gasPriceNumber })
                 .then((result) => {
                     console.log(result);
-                    window.location.reload()
+                    window.location.reload();
                 })
                 .catch()
         }
@@ -138,13 +151,14 @@ const NftDetails = () => {
     const removeSale = async (collectionid, tokenid) => {
         if (web3Api) {
             setShow(true)
+            setBtnName("cacelsale");
 
             const gasPriceNumber = await getGasPrice();
 
             nftContract.methods.cancelfixedsale(tokenid).send({ from: currentAccount, gasPrice: gasPriceNumber})
                 .then((result) => {
                     console.log(result);
-                    window.location.reload()
+                    window.location.reload();
                 })
                 .catch()
 
@@ -164,6 +178,7 @@ const NftDetails = () => {
     const buyAuctionNft = async (tokenid, amount) => {
         if (web3Api) {
             setShow(true)
+            setBtnName("buyauc");
 
             const gasPriceNumber = await getGasPrice();
             let amountIn = web3Api.utils.toBN(fromExponential(((parseFloat(amount)) * Math.pow(10, 18))));
@@ -205,12 +220,13 @@ const NftDetails = () => {
     const claimAuctionNft = async (collectionid, tokenid) => {
         if (web3Api) {
             setShow(true)
+            setBtnName("claimauc");
             const gasPriceNumber = await getGasPrice();
 
             nftContract.methods.claim(collectionid, tokenid).send({ from: currentAccount, gasPrice: gasPriceNumber })
                 .then((recipt) => {
                     setShow(false)
-                    // history.push('/mycollection')
+                    navigate("/my-collections")
                 })
                 .catch((err) => {
                     setShow(false)
@@ -220,6 +236,7 @@ const NftDetails = () => {
 
     const fixedSale = async (tokenid, price) => {
         setShow(true)
+        setBtnName("fixedsale");
         if (web3Api) {
 
             const gasPriceNumber = await getGasPrice();
@@ -229,7 +246,7 @@ const NftDetails = () => {
                 .then((result) => {
                     if (result.status === true) {
                         setShow(false);
-                        // history.push('/mycollection');
+                        navigate("/my-collections")
                     } else {
                         alert('failed');
                     }
@@ -255,6 +272,7 @@ const NftDetails = () => {
     const auction = async (tokenid, price, endday, endhours) => {
         if (web3Api) {
             setShow(true)
+            setBtnName("auc");
             const gasPriceNumber = await getGasPrice();
             let priceIn = web3Api.utils.toBN(fromExponential(((parseFloat(price)) * Math.pow(10, 18))));
 
@@ -262,7 +280,7 @@ const NftDetails = () => {
                 .then((recipt) => {
                     if (recipt.status === true) {
                         setShow(false)
-                        // history.push('/mycollection')
+                        navigate("/my-collections")
                     } else {
                         alert('failed')
                     }
@@ -275,6 +293,7 @@ const NftDetails = () => {
 
     const burnMain = async (tokenid) => {
         setShow(true)
+        setBtnName("burn");
         if (web3Api) {
             const gasPriceNumber = await getGasPrice();
 
@@ -283,7 +302,7 @@ const NftDetails = () => {
                 .then((result) => {
                     console.log(result);
                     setShow(false)
-                    // history.goBack()
+                    navigate("/my-nfts")
                 })
                 .catch((err) => {
                     setShow(false)
@@ -340,7 +359,7 @@ const NftDetails = () => {
                                     <span>
                                         <img src="/assets/images/zk/eth.svg" alt="" />
                                     </span>
-                                    0.5
+                                    {listPrice}
                                 </p>
                             </div>
                             <div className="productDetails__inner-info-text">
@@ -352,7 +371,7 @@ const NftDetails = () => {
                                     <span>
                                         <img src="/assets/images/zk/eth.svg" alt="" />
                                     </span>
-                                    0.0075
+                                    {Number(listPrice) * 1000000000000000000 * 0.015 / 1000000000000000000}
                                 </p>
                             </div>
                             <div className="productDetails__inner-info-text">
@@ -364,7 +383,7 @@ const NftDetails = () => {
                                     <span>
                                         <img src="/assets/images/zk/eth.svg" alt="" />
                                     </span>
-                                    0.025
+                                    {Number(listPrice) * 1000000000000000000 * 0.05 / 1000000000000000000}
                                 </p>
                             </div>
                             <div className="productDetails__inner-info-total">
@@ -375,7 +394,7 @@ const NftDetails = () => {
                                     <span>
                                         <img src="/assets/images/zk/eth.svg" alt="" />
                                     </span>
-                                    0.5325
+                                    {Number(listPrice) * 1000000000000000000 * 1.02 / 1000000000000000000}
                                 </p>
                             </div>
                             <div className="productDetails__inner-info-pay">
@@ -394,12 +413,15 @@ const NftDetails = () => {
                                     <img src="/assets/images/zk/arrow-down.svg" alt="" />
                                 </div>
                             </div>
-                            <p>
-                                <span>
-                                    <img src="/assets/images/zk/infoYellow.svg" alt="" />
-                                </span>
-                                Not enough funds in your wallet
-                            </p>
+                            {Number(listPrice) * 1000000000000000000 * 1.02 / 1000000000000000000 > (Number(mybalance) + 0.002) &&
+                                <p>
+                                    <span>
+                                        <img src="/assets/images/zk/infoYellow.svg" alt="" />
+                                    </span>
+                                    Not enough funds in your wallet
+                                </p>
+                            }
+                            <br/>
                             {/* <div className="productDetails__inner-info-text">
                                 <h6>
                                     Add funds with:
@@ -419,7 +441,7 @@ const NftDetails = () => {
                             {buyPrice > 0 && nOwner?.toLowerCase() === currentAccount?.toLowerCase() ? null :
                                 buyPrice > 0 ? 
                                 <div className="productDetails__inner-info-text">
-                                    <button className="button--primary" style={{width:"100%", borderRadius:8}} onClick={() => buyFixedNft(nftData[7], nftData[0], buyPrice)} >Buy now</button>
+                                    <button className="button--primary" style={{width:"100%", borderRadius:8}} onClick={() => buyFixedNft(nftData[7], nftData[0], buyPrice)} >Buy now {btnName=="buynft" && show && <i className='fas fa-spinner fa-pulse fa-1x ml-3'></i>}</button>
                                 </div>
                                  : null
                             }                          
@@ -427,12 +449,12 @@ const NftDetails = () => {
                             {aucTime?.d === 0 && aucTime?.h === 0 && aucTime?.m === 0 && aucOwner?.id.toLowerCase() === currentAccount?.toLowerCase() ?
                                 (aucBuyPrice > 0 && aucOwner?.val >= aucBuyPrice) ? 
                                 <div className="productDetails__inner-info-text">
-                                    <button style={{width:"100%", borderRadius:8}}  className="button--primary" onClick={() => claimAuctionNft(nftData[7], nftData[0])}  >CLAIM</button>
+                                    <button style={{width:"100%", borderRadius:8}}  className="button--primary" onClick={() => claimAuctionNft(nftData[7], nftData[0])}  >CLAIM {btnName=="claimauc" && show && <i className='fas fa-spinner fa-pulse fa-1x ml-3'></i>}</button>
                                 </div>
                                  : 
                                 Number(aucBuyPrice) > 0 && Number(aucBuyPrice) > aucOwner?.val && nOwner?.toLowerCase() === currentAccount?.toLowerCase() ? 
                                 <div className="productDetails__inner-info-text">
-                                    <button style={{width:"100%", borderRadius:8}}  className="button--primary" onClick={() => removeAuction(nftData[0])} >Cancel Auction</button>
+                                    <button style={{width:"100%", borderRadius:8}}  className="button--primary" onClick={() => removeAuction(nftData[0])} >Cancel Auction {btnName=="cancelauc" && show && <i className='fas fa-spinner fa-pulse fa-1x ml-3'></i>}</button>
                                 </div>
                                  : null
                                 : null
@@ -440,7 +462,7 @@ const NftDetails = () => {
 
                             {aucTime?.d === 0 && aucTime?.h === 0 && aucTime?.m === 0 && Number(aucBuyPrice) > 0 && Number(aucBuyPrice) > aucOwner?.val && nOwner?.toLowerCase() === currentAccount?.toLowerCase() ? 
                                 <div className="productDetails__inner-info-text">
-                                    <button style={{width:"100%", borderRadius:8}}  className="button--primary" onClick={() => removeAuction(nftData[0])} >Cancel Auction</button>
+                                    <button style={{width:"100%", borderRadius:8}}  className="button--primary" onClick={() => removeAuction(nftData[0])} >Cancel Auction {btnName=="cancelauc" && show && <i className='fas fa-spinner fa-pulse fa-1x ml-3'></i>}</button>
                                 </div>: null
                             }
 
@@ -464,7 +486,7 @@ const NftDetails = () => {
                                 {openBid ?
                                     aucBuyPrice > 0 ?
                                     <div className="productDetails__inner-info-text">
-                                        <button style={{width:"100%", borderRadius:8}} className="button--primary" >BID</button>
+                                        <button style={{width:"100%", borderRadius:8}} className="button--primary" >BID {btnName=="buyauc" && show && <i className='fas fa-spinner fa-pulse fa-1x ml-3'></i>}</button>
                                     </div> : null
                                     : null
                                 }                                  
@@ -480,7 +502,7 @@ const NftDetails = () => {
                                         <h3 style={{ fontSize: '25px', textTransform: 'capitalize' }}>Auction</h3>
                                     </div>
                                     <div className="productDetails__inner-info-text">
-                                        <input type="Number" placeholder="Enter Min Bid Value in ETH" step="any" min={aucBuyPrice > aucOwner?.val ? aucBuyPrice : aucOwner?.val} onChange={(e) => setAuctionValue(e.target.value)} required />
+                                        <input type="Number" placeholder="Enter Min Bid Value in ETH" step="any" min={aucBuyPrice > aucOwner?.val ? aucBuyPrice : aucOwner?.val} onChange={(e) => {setAuctionValue(e.target.value); setListPrice(Number(e.target.value))}} required />
                                     </div>
                                     <div className="productDetails__inner-info-text">
                                         <input type="Number" placeholder="Enter Days" min="0" onChange={(e) => setDays(e.target.value)} required />
@@ -488,7 +510,7 @@ const NftDetails = () => {
                                     <div className="productDetails__inner-info-text">
                                         <input type="Number" placeholder="Enter Hours" min="0" onChange={(e) => setHour(e.target.value)} required />
                                     </div>
-                                    <button style={{width:"100%", borderRadius:8}} className="button--primary" >Auction</button>
+                                    <button style={{width:"100%", borderRadius:8}} className="button--primary" >Auction{btnName=="auc" && show && <i className='fas fa-spinner fa-pulse fa-1x ml-3'></i>}</button>
                                 </form> : null
                             }
 
@@ -496,7 +518,7 @@ const NftDetails = () => {
                                 nftData && nftData[8].toLowerCase() === currentAccount?.toLowerCase() ?
                                 <form onSubmit={(e) => {
                                         e.preventDefault()
-                                        fixedSale(nftData[7], nftData[0], saleval)
+                                        fixedSale(nftData[0], saleval)
 
                                     }} style={{marginTop:8}}>
                                     <div className="productDetails__inner-info-text">
@@ -506,7 +528,7 @@ const NftDetails = () => {
                                         <input type="Number" placeholder="Enter Sale Price in ETH" step="any" min={aucBuyPrice > aucOwner?.val ? aucBuyPrice : aucOwner?.val} onChange={(e) => setSaleVal(e.target.value)} required />
                                     </div>
                                     <div className="productDetails__inner-info-text">
-                                        <button className="button--primary" style={{width:"100%", borderRadius:8}} >Set Sale Price</button>  
+                                        <button className="button--primary" style={{width:"100%", borderRadius:8}}  >Set Sale Price {btnName=="fixedsale" && show && <i className='fas fa-spinner fa-pulse fa-1x ml-3'></i>}</button>  
                                     </div>
                                 </form>: null
                             }
@@ -514,7 +536,7 @@ const NftDetails = () => {
                             {
                                 buyPrice > 0 && nOwner?.toLowerCase() === currentAccount?.toLowerCase() ? 
                                 <div className="productDetails__inner-info-text">
-                                    <button className="button--primary" style={{width:"100%", borderRadius:8}} onClick={() => removeSale(nftData[7], nftData[0])} >Cancel</button> 
+                                    <button className="button--primary" style={{width:"100%", borderRadius:8}} onClick={() => removeSale(nftData[7], nftData[0])} >Cancel {btnName=="cancelsale" && show && <i className='fas fa-spinner fa-pulse fa-1x ml-3'></i>}</button> 
                                 </div>                                
                                 : null
                             }
@@ -522,7 +544,7 @@ const NftDetails = () => {
                             {
                                 DevWallet.toLowerCase() == currentAccount?.toLowerCase() ?
                                 <div className="productDetails__inner-info-text">
-                                    <button className="button--primary" style={{width:"100%", borderRadius:8}} onClick={() => burnMain(nftid)} >Burn NFT</button>
+                                    <button className="button--primary" style={{width:"100%", borderRadius:8}} onClick={() => burnMain(nftid)} >Burn NFT {btnName=="burn" && show && <i className='fas fa-spinner fa-pulse fa-1x ml-3'></i>}</button>
                                 </div>
                                 : null
                             }

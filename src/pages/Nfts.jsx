@@ -32,7 +32,7 @@ const NFTs = () => {
     const navigate = useNavigate();
     
     useEffect(async () => {
-        if (chainId, web3Api && currentAccount) {
+        if (chainId && web3Api && currentAccount) {
             const nftContratFile = await fetch("/abis/ZkSeaNFT.json");
             const convertNftContratFileToJson = await nftContratFile.json();
             const nFTAbi = convertNftContratFileToJson;

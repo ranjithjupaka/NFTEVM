@@ -1,5 +1,5 @@
 import React , { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams , useNavigate} from 'react-router-dom';
 import {ethers, BigNumber} from "ethers"
 import { create } from 'ipfs-http-client'
 
@@ -38,7 +38,7 @@ const CreateNFT = () => {
     const [buffer, setBuffer] = useState();
     const [displayImage, setDisplayImage] = useState();
     const [data, setData] = useState({
-        nftName: "", ownerName: "", description: "", price: "",  numMint: "0"
+        nftName: "", ownerName: "", description: "", price: "0",  numMint: "0"
     })
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -48,6 +48,8 @@ const CreateNFT = () => {
     const [mintMulti, setMintMulti] = useState(false);
     const [nftContract, setNftContract] = useState();
     const [errText, setErrText] = useState("");
+
+    const navigate = useNavigate();
 
     let clickedMultiYN = false;
 
@@ -210,11 +212,12 @@ const CreateNFT = () => {
             nftContract.methods.create(colId, currentAccount, _imgPath, data.nftName, data.ownerName, 1, des).send({ from: currentAccount, gasPrice: gasPriceNumber })
             .then((result) => {
                 console.log(result);
-                if(data.price != "0") {
-                    nftIndex();
-                } else {
-                    setUnderminting(false);
-                }
+                nftIndex();
+                // if(data.price != "0") {
+                //     nftIndex();
+                // } else {
+                //     setUnderminting(false);
+                // }
             }).catch((err) => {
                 setUnderminting(false)
             })
@@ -225,7 +228,12 @@ const CreateNFT = () => {
         if (web3Api) {
             nftContract.methods.tokenidmint().call()
             .then((id) => {
-                fixedSale(id)
+                if(data.price != "0") {
+                    fixedSale(id);
+                } else {
+                    setUnderminting(false);
+                    navigate("/nft/" + id);
+                }                
             })
             .catch(() => {
                 setUnderminting(false);
@@ -240,7 +248,8 @@ const CreateNFT = () => {
             nftContract.methods.fixedsales(tokenid, amount).send({ from: currentAccount, gasPrice: gasPriceNumber })
             .then((length) => {
                 if (length.status === true) {
-                    setUnderminting(false)
+                    setUnderminting(false);
+                    navigate("nfts/" + tokenid);
                     // history.push('/mycollection')
                 } else {
                     alert('failed');

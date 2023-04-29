@@ -149,7 +149,7 @@ const CreateCollection = () => {
                                 {displayImage ? <img src={displayImage} alt="" /> : <img src="/assets/images/default.jpg" style={{ objectFit: 'contain', width: '100%' }} />}
                             </div>
                         </div>
-                        <form className="creatCollection__inner-form" onSubmit={submit} style={{paddingBottom: 60}}>
+                        <div className="creatCollection__inner-form" onSubmit={submit} style={{paddingBottom: 60}}>
                             <div className="creatCollection__form-buttons">
                                 <button className="button--primary">Create Collection</button>
                                 <button className="button--border">
@@ -172,9 +172,9 @@ const CreateCollection = () => {
                                     <input type="text" placeholder="Website" onChange={(e) => setData({ ...data, websiteUrl: e.target.value })}/>
                                 </div>
                             </div>
-                            <button className="button--primary">Create Collection {underminting && <i className='fas fa-spinner fa-pulse fa-1x ml-3'></i>}</button>
+                            <button onClick={(e) => {submit(e);}} className="button--primary">Create Collection {underminting && <i className='fas fa-spinner fa-pulse fa-1x ml-3'></i>}</button>
                             <p style={{color:"red", position:"absolute", bottom:10}}>{errText}</p>
-                        </form>
+                        </div>
                     </div>                    
                 </div>
             </section>
