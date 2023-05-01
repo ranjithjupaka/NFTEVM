@@ -19,29 +19,12 @@ const Footer = () => {
     const socialList = [
         {
             icon: "fab fa-twitter",
-            link: "#"
+            link: "https://twitter.com/zkzerosea"
         },
-        // {
-        //     icon: "fab fa-facebook",
-        //     link: "#"
-        // },
         {
             icon: "fab fa-telegram-plane",
-            link: "#"
-        },
-        // {
-        //     icon: "fab fa-youtube",
-        //     link: "#"
-        // },
-        // {
-        //     icon: "icon-fl-tik-tok-2",
-        //     link: "#"
-        // },
-        // {
-        //     icon: "icon-fl-vt",
-        //     link: "#"
-        // },
-        
+            link: "https://t.me/ZkZeroSea"
+        }       
 
     ]
 
@@ -112,7 +95,7 @@ const Footer = () => {
                                     <ul>
                                         {
                                             socialList.map((item,index) =>(
-                                                <li key={index}><Link to={item.link}><i className={item.icon}></i></Link></li>
+                                                <li key={index}><a href={item.link} target='_blank'><i className={item.icon}></i></a></li>
                                             ))
                                         }
                                     </ul>

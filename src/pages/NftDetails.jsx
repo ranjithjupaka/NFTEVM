@@ -50,8 +50,7 @@ const NftDetails = () => {
             setNftContract(nftContract);
 
             const balance = await web3Api.eth.getBalance(currentAccount);
-            setMybalance(web3Api.utils.fromWei(balance, 'ether'));
-            
+            setMybalance(web3Api.utils.fromWei(balance, 'ether'));            
         }
     }, [chainId, web3Api, currentAccount])
 
@@ -80,10 +79,10 @@ const NftDetails = () => {
     const saleNft = async (id) => {
         if (web3Api) {
             nftContract.methods.listofsalenft(id).call({ from: currentAccount })
-                .then((length) => {
-                    setBuyPrice((Number(length[3])) / 1000000000000000000);
-                    setAucBuyPrice(((Number(length[2])) / 1000000000000000000));
-                    setListPrice((Number(length[3])) / 1000000000000000000);
+                .then((result) => {
+                    setBuyPrice((Number(result[3])) / 1000000000000000000);
+                    setAucBuyPrice(((Number(result[2])) / 1000000000000000000));
+                    setListPrice((Number(result[3])) / 1000000000000000000);
                 })
                 .catch()
         }
@@ -99,7 +98,7 @@ const NftDetails = () => {
             nftContract.methods.buynft(collectionid, tokenid).send({ from: currentAccount, value: amountIn, gasPrice: gasPriceNumber})
                 .then((recipt) => {
                     setShow(false);
-                    // history.push('/mynfts');
+                    navigate("/my-nfts");
                 })
                 .catch((err) => {
                     setShow(false)
@@ -140,27 +139,32 @@ const NftDetails = () => {
             const gasPriceNumber = await getGasPrice();
 
             nftContract.methods.removesfromauction(tokenid).send({ from: currentAccount, gasPrice: gasPriceNumber })
-                .then((result) => {
-                    console.log(result);
-                    window.location.reload();
-                })
-                .catch()
+            .then((result) => {
+                console.log(result);
+                setShow(false);
+                window.location.reload();
+            })
+            .catch((err) => {
+                setShow(false)
+            })
         }
     }
 
     const removeSale = async (collectionid, tokenid) => {
         if (web3Api) {
             setShow(true)
-            setBtnName("cacelsale");
+            setBtnName("cancelsale");
 
             const gasPriceNumber = await getGasPrice();
 
             nftContract.methods.cancelfixedsale(tokenid).send({ from: currentAccount, gasPrice: gasPriceNumber})
-                .then((result) => {
-                    console.log(result);
-                    window.location.reload();
-                })
-                .catch()
+            .then((result) => {
+                console.log(result);
+                window.location.reload();
+            })
+            .catch((err) => {
+                setShow(false)
+            })
 
         }
     }
@@ -168,10 +172,10 @@ const NftDetails = () => {
     const owner = async (tokenid) => {
         if (web3Api) {
             nftContract.methods.originalowner(tokenid).call({ from: currentAccount })
-                .then((result) => {
-                    setNOwner(result)
-                })
-                .catch()
+            .then((result) => {
+                setNOwner(result)
+            })
+            .catch()
         }
     }
 
@@ -208,12 +212,12 @@ const NftDetails = () => {
     const timer1 = async (id) => {
         if (web3Api) {
             nftContract.methods.timing(id).call({ from: currentAccount })
-                .then((result) => {
-                    var day = Math.floor(result / 86400)
-                    var hr = Math.floor((result - day * 86400) / 3600)
-                    var minutesout = Math.floor((result - day * 86400 - hr * 3600) / 60);
-                    setAucTime({ id: id, d: day, h: hr, m: minutesout })
-                }).catch()
+            .then((result) => {
+                var day = Math.floor(result / 86400)
+                var hr = Math.floor((result - day * 86400) / 3600)
+                var minutesout = Math.floor((result - day * 86400 - hr * 3600) / 60);
+                setAucTime({ id: id, d: day, h: hr, m: minutesout })
+            }).catch()
         }
     }
 
@@ -224,13 +228,13 @@ const NftDetails = () => {
             const gasPriceNumber = await getGasPrice();
 
             nftContract.methods.claim(collectionid, tokenid).send({ from: currentAccount, gasPrice: gasPriceNumber })
-                .then((recipt) => {
-                    setShow(false)
-                    navigate("/my-collections")
-                })
-                .catch((err) => {
-                    setShow(false)
-                })
+            .then((recipt) => {
+                setShow(false)
+                navigate("/my-collections")
+            })
+            .catch((err) => {
+                setShow(false)
+            })
         }
     }
 
@@ -243,17 +247,17 @@ const NftDetails = () => {
             let priceIn = web3Api.utils.toBN(fromExponential(((parseFloat(price)) * Math.pow(10, 18))));   
 
             nftContract.methods.fixedsales(tokenid, priceIn).send({ from: currentAccount, gasPrice: gasPriceNumber})
-                .then((result) => {
-                    if (result.status === true) {
-                        setShow(false);
-                        navigate("/my-collections")
-                    } else {
-                        alert('failed');
-                    }
-                })
-                .catch((err) => {
+            .then((result) => {
+                if (result.status === true) {
                     setShow(false);
-                })
+                    navigate("/my-collections")
+                } else {
+                    alert('failed');
+                }
+            })
+            .catch((err) => {
+                setShow(false);
+            })
         }
     }
 
@@ -277,17 +281,17 @@ const NftDetails = () => {
             let priceIn = web3Api.utils.toBN(fromExponential(((parseFloat(price)) * Math.pow(10, 18))));
 
             nftContract.methods.startauction(tokenid, priceIn, endday, endhours).send({ from: currentAccount, gasPrice: gasPriceNumber})
-                .then((recipt) => {
-                    if (recipt.status === true) {
-                        setShow(false)
-                        navigate("/my-collections")
-                    } else {
-                        alert('failed')
-                    }
-                })
-                .catch(err => {
+            .then((recipt) => {
+                if (recipt.status === true) {
                     setShow(false)
-                })
+                    navigate("/my-collections")
+                } else {
+                    alert('failed')
+                }
+            })
+            .catch(err => {
+                setShow(false)
+            })
         }
     }
 
@@ -299,15 +303,15 @@ const NftDetails = () => {
 
             const colId = nftData[7];
             nftContract.methods.burnorinalnft(colId, tokenid).send({ from: currentAccount, gasPrice: gasPriceNumber})
-                .then((result) => {
-                    console.log(result);
-                    setShow(false)
-                    navigate("/my-nfts")
-                })
-                .catch((err) => {
-                    setShow(false)
-                    console.log(err);
-                })
+            .then((result) => {
+                console.log(result);
+                setShow(false)
+                navigate("/my-nfts")
+            })
+            .catch((err) => {
+                setShow(false)
+                console.log(err);
+            })
         }
     }
 
@@ -433,11 +437,11 @@ const NftDetails = () => {
                                     Stripe
                                 </p>
                             </div> */}
-                            {nOwner?.toLowerCase() !== currentAccount?.toLowerCase() && 
+                            {/* {nOwner?.toLowerCase() !== currentAccount?.toLowerCase() && 
                                 <div className="productDetails__inner-info-text">
                                     <button className="button--primary" style={{width:"100%", borderRadius:8}} onClick={() => navigate('/bid/' + nftData[0])} >Make Offer</button>
                                 </div>
-                            }  
+                            }   */}
                             {buyPrice > 0 && nOwner?.toLowerCase() === currentAccount?.toLowerCase() ? null :
                                 buyPrice > 0 ? 
                                 <div className="productDetails__inner-info-text">
@@ -536,7 +540,7 @@ const NftDetails = () => {
                             {
                                 buyPrice > 0 && nOwner?.toLowerCase() === currentAccount?.toLowerCase() ? 
                                 <div className="productDetails__inner-info-text">
-                                    <button className="button--primary" style={{width:"100%", borderRadius:8}} onClick={() => removeSale(nftData[7], nftData[0])} >Cancel {btnName=="cancelsale" && show && <i className='fas fa-spinner fa-pulse fa-1x ml-3'></i>}</button> 
+                                    <button className="button--primary" style={{width:"100%", borderRadius:8}} onClick={() => removeSale(nftData[7], nftData[0])} >Cancel Sale {btnName=="cancelsale" && show && <i className='fas fa-spinner fa-pulse fa-1x ml-3'></i>}</button> 
                                 </div>                                
                                 : null
                             }

@@ -28,7 +28,8 @@ const MyNFTs = () => {
     const [allprice, setallprice] = useState();
     const [colllist, setcolllist] = useState();
     const [alldata, setalldata] = useState([]);
-    const [newlist, setnewlist] = useState([])
+    const [newlist, setnewlist] = useState([]);
+    const [nftcnt, setNftcnt] = useState(-1);
 
     const navigate = useNavigate();
     
@@ -54,8 +55,9 @@ const MyNFTs = () => {
         if (web3Api) {
             await nftContract.methods.balanceOf(currentAccount).call({ from: currentAccount })
             .then((bal) => {
+                setNftcnt(bal);
                 if (parseInt(bal) > 0) {
-                    getMyNfts(bal);
+                    getMyNfts(bal);                    
                 }                
             })
             .catch();
@@ -77,12 +79,12 @@ const MyNFTs = () => {
     const nftInfo = async (id) => {
         if (web3Api) {
             nftContract.methods.nftinformation(id).call({ from: currentAccount })
-                .then((result) => {
-                    saveFixedSaleList({ ...result, 12: JSON.parse(result[5])[1] });
-                    localStorage.setItem(`buylist${id}`, JSON.stringify(result));
-                    setArr(id);
-                    saleNftPrie(result[0]);
-                }).catch()
+            .then((result) => {
+                saveFixedSaleList({ ...result, 12: JSON.parse(result[5])[1] });
+                localStorage.setItem(`buylist${id}`, JSON.stringify(result));
+                setArr(id);
+                saleNftPrie(result[0]);
+            }).catch()
         }
     }
 
@@ -95,15 +97,15 @@ const MyNFTs = () => {
     const saleNftPrie = async (id) => {
         if (web3Api) {
             nftContract.methods.listofsalenft(id).call({ from: currentAccount })
-                .then((length) => {
-                    const val = {
-                        id: id, value: length[3]
-                    }
-                    localStorage.setItem(`normasale${id}`, (length[3]))
-                    setpricearr(id)
-                    getallprice(val)
-                })
-                .catch()
+            .then((length) => {
+                const val = {
+                    id: id, value: length[3]
+                }
+                localStorage.setItem(`normasale${id}`, (length[3]))
+                setpricearr(id)
+                getallprice(val)
+            })
+            .catch()
         }
     }
 
@@ -216,7 +218,7 @@ const MyNFTs = () => {
             <section className="grid nft">
                 <div className="autoContainer">
                     <div className="grid__inner">
-                        {   allFixedSale.map((item, idx) => {
+                        {   allFixedSale.length > 0 ? allFixedSale.map((item, idx) => {
                                 return(
                                     <div className="cartNft" key={idx}>
                                         <Link to={`/nft/${item[0]}`}>
@@ -240,6 +242,12 @@ const MyNFTs = () => {
                                     </div>
                                 )
                             })
+                            :
+                            nftcnt == -1 ?  <div style={{width:"100%", height:"100%", display:"flex", justifyContent:"center"}}><span style={{color:"grey", fontSize: 32}}>Loading ... </span></div> 
+                            :
+                            nftcnt > 0 ? <div style={{width:"100%", height:"100%", display:"flex", justifyContent:"center"}}><span style={{color:"grey", fontSize: 32}}>Loading ... </span></div> 
+                            :
+                            <div style={{width:"100%", height:"100%", display:"flex", justifyContent:"center"}}><span style={{color:"grey", fontSize: 32}}>No Items</span></div> 
                         }
                     </div>
                 </div>

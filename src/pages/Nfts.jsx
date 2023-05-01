@@ -28,6 +28,7 @@ const NFTs = () => {
     const [colllist, setcolllist] = useState();
     const [alldata, setalldata] = useState([]);
     const [newlist, setnewlist] = useState([]);
+    const [nftcnt, setNftcnt] = useState(-1);
 
     const navigate = useNavigate();
     
@@ -215,6 +216,7 @@ const NFTs = () => {
     }
 
     const saveAllFixedSaleList = (data) => {
+        setNftcnt(1);
         setAllFixedSale((old) => [
             ...old, data
         ])
@@ -245,7 +247,7 @@ const NFTs = () => {
             <section className="grid nft">
                 <div className="autoContainer">
                     <div className="grid__inner">
-                        {   allFixedSale.map((item, idx) => {
+                        {  allFixedSale.length > 0 ? allFixedSale.map((item, idx) => {
                                 return(
                                     <div className="cartNft" key={idx}>
                                         <Link to={`/nft/${item[0]}`}>
@@ -270,6 +272,12 @@ const NFTs = () => {
                                     </div>
                                 )
                             })
+                            :
+                            nftcnt == -1 ?  <div style={{width:"100%", height:"100%", display:"flex", justifyContent:"center"}}><span style={{color:"grey", fontSize: 32}}>Loading ... </span></div> 
+                            :
+                            nftcnt > 0 ? <div style={{width:"100%", height:"100%", display:"flex", justifyContent:"center"}}><span style={{color:"grey", fontSize: 32}}>Loading ... </span></div> 
+                            :
+                            <div style={{width:"100%", height:"100%", display:"flex", justifyContent:"center"}}><span style={{color:"grey", fontSize: 32}}>No Items</span></div> 
                         }
                     </div>
                 </div>

@@ -61,7 +61,8 @@ const CreateNFT = () => {
     
             let nftContract = new web3Api.eth.Contract(nFTAbi, NFTAddr[chainId]);
             setNftContract(nftContract);
-        }        
+        }
+        
     }, [chainId, web3Api, currentAccount])
 
     const selectImage = (e) => {
@@ -203,21 +204,16 @@ const CreateNFT = () => {
                 setUnderminting(false);
                 setErrText("NFT image already used.");
                 return false;
-            }           
+            }
             
             setUnderminting(true);
             const des = JSON.stringify([data.description, dataType])
             const gasPriceNumber = await getGasPrice();
 
-            nftContract.methods.create(colId, currentAccount, _imgPath, data.nftName, data.ownerName, 1, des).send({ from: currentAccount, gasPrice: gasPriceNumber })
+            let mintfee = await nftContract.methods.mintfee().call({ from: currentAccount });
+            nftContract.methods.create(colId, currentAccount, _imgPath, data.nftName, data.ownerName, 1, des).send({ from: currentAccount, value: mintfee, gasPrice: gasPriceNumber })
             .then((result) => {
-                console.log(result);
                 nftIndex();
-                // if(data.price != "0") {
-                //     nftIndex();
-                // } else {
-                //     setUnderminting(false);
-                // }
             }).catch((err) => {
                 setUnderminting(false)
             })
@@ -243,14 +239,17 @@ const CreateNFT = () => {
 
     const fixedSale = async (tokenid) => {
         if (web3Api) {
-            let amount = parseFloat(data.price) * 1e18;
+            let amount = 0;
+            if (data.price)
+                amount = ethers.utils.formatUnits(ethers.utils.parseUnits(data.price.toString(), 18), 0);
+
             const gasPriceNumber = await getGasPrice();
+            
             nftContract.methods.fixedsales(tokenid, amount).send({ from: currentAccount, gasPrice: gasPriceNumber })
             .then((length) => {
                 if (length.status === true) {
                     setUnderminting(false);
-                    navigate("nfts/" + tokenid);
-                    // history.push('/mycollection')
+                    navigate("/nft/" + tokenid);
                 } else {
                     alert('failed');
                     setUnderminting(false);
@@ -274,32 +273,24 @@ const CreateNFT = () => {
             if (data.price)
                 amount = ethers.utils.formatUnits(ethers.utils.parseUnits(data.price.toString(), 18), 0);
 
-            nftContract.methods.mintfee().call({ from: currentAccount })
-            .then(async (value) => {
-                let mintfee = value;                
-                mintfee = ethers.utils.formatUnits(BigNumber.from(mintfee), 9);
-
-                let mintfeeTotal = parseFloat(mintfee) * _times;
-                mintfeeTotal = ethers.utils.formatUnits(ethers.utils.parseUnits(mintfeeTotal.toString(), 9), 0);
-
-                const gasPriceNumber = await getGasPrice();
-
-                nftContract.methods.createMulti(colId, currentAccount, nftImage, data.nftName, data.ownerName, copies, des, _times, amount).send({ from: currentAccount, value: mintfeeTotal, gasPrice: gasPriceNumber})
-                .then((result) => {
-                    if (result.status === true) { 
-                        // history.goBack();
-                        setShow(false);
-                        setUnderminting(false)
-                    } else {
-                        alert('failed');
-                        setUnderminting(false)
-                    }
-                }).catch((err) => {
+            const mintfee = await nftContract.methods.mintfee().call();
+            const mintfeeTotal = mintfee * _times;
+            const gasPriceNumber = await getGasPrice();
+            
+            nftContract.methods.createMulti(colId, currentAccount, nftImage, data.nftName, data.ownerName, copies, des, _times, amount).send({ from: currentAccount, value: mintfeeTotal, gasPrice: gasPriceNumber})
+            .then((result) => {
+                if (result.status === true) { 
+                    // history.goBack();
+                    navigate("/my-nfts")
                     setShow(false);
                     setUnderminting(false)
-                })
-            }).catch(() => {
-                setUnderminting(false);
+                } else {
+                    alert('failed');
+                    setUnderminting(false)
+                }
+            }).catch((err) => {
+                setShow(false);
+                setUnderminting(false)
             })
         }
     }

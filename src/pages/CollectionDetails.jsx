@@ -20,6 +20,11 @@ const CollectionDetails = () => {
     const [nftContract, setNftContract] = useState(); 
     const [colData, setColData] = useState(); 
     const [show, setShow] = useState(); 
+    const [totalSupply, setTotalSupply] = useState(0);
+    const [allNftData, setAllNftData] = useState([]);
+    const [saleNFT, setSaleNFT] = useState([]);
+    const [ownersData, setOwnersData] = useState([]);
+    let owners = [];
     const navigate = useNavigate();
 
     useEffect(async () => {
@@ -30,9 +35,52 @@ const CollectionDetails = () => {
 
             let nftContract = new web3Api.eth.Contract(nFTAbi, NFTAddr[chainId]);
             setNftContract(nftContract);
-            getCollectionDetails(colId, nftContract)
+            getCollectionDetails(colId, nftContract);
+            getNftsInCol(colId, nftContract);
+            getSaleNft(0, nftContract);
         }
     }, [chainId, web3Api])
+
+    const getNftsInCol = async (_colId, _nftContract) => {
+        if (web3Api) {
+            _nftContract.methods.collectionnft(_colId).call()
+            .then((colItemIndex) => {
+                setTotalSupply(colItemIndex.length);
+                for (let i = 0; i < colItemIndex?.length; i++) {
+                    getNftDetails(colItemIndex[i], _nftContract)
+                }
+            }).catch()
+        }
+    }
+
+    const getNftDetails = async (id, _nftContract) => {
+        if (web3Api) {
+            _nftContract.methods.nftinformation(id).call()
+            .then((nftDetail) => {
+                makeAllNftData({...nftDetail, 12:JSON.parse(nftDetail[5])[1] })
+            }).catch()
+        }
+    }
+
+    const getSaleNft = async (id, _nftContract) => {
+        if (web3Api) {
+            _nftContract.methods.listofsalenft(id).call()
+            .then((result) => {
+                setSaleNFT(result[0]);
+            }).catch()
+        }
+    }
+
+    const makeAllNftData = (data) => {
+        if (!owners.includes(data[8])) {
+            owners.push(data[8]);
+            setOwnersData(owners);
+        }
+
+        setAllNftData((old) => [
+            ...old, data
+        ])
+    } 
 
     const getCollectionDetails = async (id, _nftContract) => {
         if (web3Api) {
@@ -96,7 +144,7 @@ const CollectionDetails = () => {
                                     <span>
                                     <img src="/assets/images/zk/eth.svg" alt="" />
                                     </span>
-                                    0.5
+                                    _ _
                                 </p>
                                 </div>
                                 <div className="productInfoItem">
@@ -107,7 +155,7 @@ const CollectionDetails = () => {
                                     <span>
                                     <img src="/assets/images/zk/eth.svg" alt="" />
                                     </span>
-                                    0.5
+                                    _ _
                                 </p>
                                 </div>
                                 <div className="productInfoItem">
@@ -129,7 +177,7 @@ const CollectionDetails = () => {
                                     </span>
                                 </h6>
                                 <p>
-                                    16
+                                    {ownersData.length}
                                 </p>
                                 </div>
                                 <div className="productInfoItem">
@@ -137,7 +185,9 @@ const CollectionDetails = () => {
                                     LISTED
                                 </h6>
                                 <p>
-                                    10
+                                    {allNftData.filter((item) => {
+                                        return saleNFT.includes(item[0]);
+                                    }).length}
                                 </p>
                                 </div>
                                 <div className="productInfoItem">
@@ -148,23 +198,23 @@ const CollectionDetails = () => {
                                     </span>
                                 </h6>
                                 <p>
-                                    66
+                                    {totalSupply}
                                 </p>
                                 </div>                            
                             </div>
                             <div className="productInfo__inner-details-social">
                                 <div className="productInfoSocials">
-                                <a href="#" className="button--social">
+                                <a href="#" className="button--social" target='_blank'>
                                     <span>
                                         <img src="/assets/images/zk/discord.svg" alt="" />
                                     </span>
                                 </a>
-                                <a href="#" className="button--social">
+                                <a href="https://twitter.com/zkzerosea" className="button--social" target='_blank'>
                                     <span>
                                         <img src="/assets/images/zk/twitter.svg" alt="" />
                                     </span>
                                 </a>
-                                <a href="#" className="button--social">
+                                <a href="#" className="button--social" target='_blank'>
                                     <span>
                                         <img src="/assets/images/zk/globus.svg" alt="" />
                                     </span>
@@ -251,8 +301,8 @@ const CollectionDetails = () => {
                             <div className="dropdown__content">
                             <div className="dropdown__content-item">
                                 <div className="input--radio">
-                                <input type="radio" value="price-1" name="dropdown-1" checked />
-                                <label className="tick" for="price-1">
+                                <input type="radio" value="price-1" name="dropdown-1" checked onChange={(e)=>{}}/>
+                                <label className="tick" >
                                     <span className="checkbox__text">
                                     <img src="/assets/images/zk/tick-circle.svg" alt="" />
                                     </span>
@@ -263,7 +313,7 @@ const CollectionDetails = () => {
                                 </div>
                                 <div className="input--radio">
                                 <input type="radio" value="price-2" name="dropdown-1" />
-                                <label className="tick" for="price-2">
+                                <label className="tick" >
                                     <span className="checkbox__text">
                                     <img src="/assets/images/zk/tick-circle.svg" alt="" />
                                     </span>
@@ -274,7 +324,7 @@ const CollectionDetails = () => {
                                 </div>
                                 <div className="input--radio">
                                 <input type="radio" value="price-3" name="dropdown-1" />
-                                <label className="tick" for="price-3">
+                                <label className="tick" >
                                     <span className="checkbox__text">
                                     <img src="/assets/images/zk/tick-circle.svg" alt="" />
                                     </span>
@@ -296,8 +346,8 @@ const CollectionDetails = () => {
                             <div className="dropdown__content">
                             <div className="dropdown__content-item">
                                 <div className="input--radio">
-                                <input type="radio" value="price-4" name="dropdown-2" checked />
-                                <label className="tick" for="price-4">
+                                <input type="radio" value="price-4" name="dropdown-2" checked onChange={() => {}}/>
+                                <label className="tick" >
                                     <span className="checkbox__text">
                                     <img src="/assets/images/zk/tick-circle.svg" alt="" />
                                     </span>
@@ -308,7 +358,7 @@ const CollectionDetails = () => {
                                 </div>
                                 <div className="input--radio">
                                 <input type="radio" value="price-5" name="dropdown-2" />
-                                <label className="tick" for="price-5">
+                                <label className="tick" >
                                     <span className="checkbox__text">
                                     <img src="/assets/images/zk/tick-circle.svg" alt="" />
                                     </span>
@@ -319,7 +369,7 @@ const CollectionDetails = () => {
                                 </div>
                                 <div className="input--radio">
                                 <input type="radio" value="price-6" name="dropdown-2" />
-                                <label className="tick" for="price-6">
+                                <label className="tick" >
                                     <span className="checkbox__text">
                                     <img src="/assets/images/zk/tick-circle.svg" alt="" />
                                     </span>

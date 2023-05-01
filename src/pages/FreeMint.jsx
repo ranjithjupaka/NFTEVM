@@ -1,5 +1,5 @@
 import React , { useState, useEffect } from 'react';
-import { Link, useParams ,} from 'react-router-dom';
+import { Link, useParams , useNavigate} from 'react-router-dom';
 import {ethers, BigNumber} from "ethers"
 import { create } from 'ipfs-http-client'
 
@@ -50,6 +50,8 @@ const FreeMint = () => {
     const [errText, setErrText] = useState("");
     const [txHash, setTxHash] = useState("");
     const [mintResult, setMintResult] = useState(false);
+
+    const navigate = useNavigate();
 
     useEffect(async () => {
         if (chainId && web3Api && currentAccount) {
@@ -136,37 +138,27 @@ const FreeMint = () => {
             if (data.price)
                 amount = ethers.utils.formatUnits(ethers.utils.parseUnits(data.price.toString(), 18), 0);
 
-            nftContract.methods.mintfee().call({ from: currentAccount })
-            .then(async (value) => {
-                let mintfee = value;                
-                mintfee = ethers.utils.formatUnits(BigNumber.from(mintfee), 9);
+            const mintfee = await nftContract.methods.mintfee().call();
+            const mintfeeTotal = mintfee * _times;
+            const gasPriceNumber = await getGasPrice();
 
-                let mintfeeTotal = parseFloat(mintfee) * _times;
-                mintfeeTotal = ethers.utils.formatUnits(ethers.utils.parseUnits(mintfeeTotal.toString(), 9), 0);
-                
-                const gasPriceNumber = await getGasPrice();
-                
-                nftContract.methods.createMulti("1", currentAccount, nftImage, data.nftName, data.ownerName, copies, des, _times, amount).send({ from: currentAccount, value: mintfeeTotal, gasPrice: gasPriceNumber})
-                .then((result) => {
-                    if (result.status === true) { 
-                        // console.log(result.transactionHash);
-                        setTxHash(result.transactionHash);
-                        // history.goBack();
-                        setShow(false);
-                        setUnderminting(false);
-                        setMintResult(true);
-                    } else {
-                        alert('failed');
-                        setUnderminting(false)
-                    }
-                }).catch((err) => {
-                    console.log(err)
+            nftContract.methods.createMulti("1", currentAccount, nftImage, data.nftName, data.ownerName, copies, des, _times, amount).send({ from: currentAccount, value: mintfeeTotal, gasPrice: gasPriceNumber})
+            .then((result) => {
+                if (result.status === true) { 
+                    // console.log(result.transactionHash);
+                    setTxHash(result.transactionHash);                    
                     setShow(false);
+                    setUnderminting(false);
+                    setMintResult(true);
+                    // navigate("/my-nfts");
+                } else {
+                    alert('failed');
                     setUnderminting(false)
-                })
+                }
             }).catch((err) => {
                 console.log(err)
-                setUnderminting(false);
+                setShow(false);
+                setUnderminting(false)
             })
         }
     }

@@ -18,6 +18,7 @@ const MyCollections = () => {
     const [curTab, setCurTab] = useState("col"); 
     const [show, setShow] = useState(false); 
     const [nftContract, setNftContract] = useState(); 
+    const [colcnt, setColcnt] = useState(-1); 
 
     const navigate = useNavigate();
     
@@ -41,8 +42,7 @@ const MyCollections = () => {
     const getMyCollections = async () => {
         if (web3Api) {
             nftContract.methods.totalcollectiondetails().call({ from: currentAccount })
-                .then((result) => {
-                    console.log("fees", result);
+                .then((result) => {                    
                     for (let i = 0; i < result?.length; i++) {
                         getCollectionDetails(result[i]);
                     }
@@ -68,6 +68,7 @@ const MyCollections = () => {
     }
 
     const makeAllColList = (data) => {
+        setColcnt(1);
         setAllColData((old) => [
             ...old, data
         ])
@@ -99,7 +100,7 @@ const MyCollections = () => {
                 <div className="autoContainer">
                     <div className="grid__inner">
                         { 
-                            allColData.map((item, idx) => {
+                            allColData.length > 0 ? allColData.map((item, idx) => {
                                 return(
                                     <div className="cartNft" key={idx}>
                                         <Link to={`/collection/${item[0]}`}>
@@ -114,6 +115,13 @@ const MyCollections = () => {
                                     </div>
                                 )
                             })
+                            :
+                            colcnt == -1 ?  <div style={{width:"100%", height:"100%", display:"flex", justifyContent:"center"}}><span style={{color:"grey", fontSize: 32}}>Loading ... </span></div> 
+                            :
+                            colcnt > 0 ? <div style={{width:"100%", height:"100%", display:"flex", justifyContent:"center"}}><span style={{color:"grey", fontSize: 32}}>Loading ... </span></div> 
+                            :
+                            <div style={{width:"100%", height:"100%", display:"flex", justifyContent:"center"}}><span style={{color:"grey", fontSize: 32}}>No Items</span></div> 
+                            
                         }
                     </div>
                 </div>
