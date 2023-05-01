@@ -292,7 +292,7 @@ const FreeMint = () => {
                             </div>
                             </div>
                             {mintResult && 
-                                <a className="button button--primary _lg" href={CHAIN_INFO[chainId].blockExplorerUrls + "/tx/" + txHash} target="_blank">
+                                <a className="button button--primary _lg" href={CHAIN_INFO[chainId].blockExplorerUrls[0] + "/tx/" + txHash} target="_blank">
                                     <span>
                                         <span className="_hideMob">Successfully minted -</span>
                                         view on etherscan

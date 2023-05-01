@@ -13,7 +13,7 @@ import logoheader from '../../assets/images/logo/logo.svg'
 import logoheader2x from '../../assets/images/logo/logo.svg'
 import logodark from '../../assets/images/logo/logo.svg'
 import logodark2x from '../../assets/images/logo/logo.svg'
-import { CHAIN_ARBI_ONE, CHAIN_BSC, CHAIN_INFO, CHAIN_ZKMAIN, CHAIN_ZKTEST } from '../../config/constants';
+import { CHAIN_ARBI_ONE, CHAIN_ARBI_TEST, CHAIN_BSC, CHAIN_BSC_TEST, CHAIN_INFO, CHAIN_ZKMAIN, CHAIN_ZKTEST } from '../../config/constants';
 
 let web3Modal;
 let provider;
@@ -33,26 +33,36 @@ function init() {
     
     let rpcOption = {};
 
-    switch (chainIdSaved) {
+    switch (Number(chainIdSaved)) {
         case CHAIN_BSC:
             rpcOption = {
-                56:CHAIN_INFO[CHAIN_BSC].rpcUrls
+                56:CHAIN_INFO[CHAIN_BSC].rpcUrls[0]
+            }
+            break;
+        case CHAIN_BSC_TEST:
+            rpcOption = {
+                97:CHAIN_INFO[CHAIN_BSC_TEST].rpcUrls[0]
             }
             break;
         case CHAIN_ZKMAIN:
             rpcOption = {
-                324:CHAIN_INFO[CHAIN_ZKMAIN].rpcUrls
+                324:CHAIN_INFO[CHAIN_ZKMAIN].rpcUrls[0]
             }
             break;
         case CHAIN_ARBI_ONE:
             rpcOption = {
-                42161:CHAIN_INFO[CHAIN_ARBI_ONE].rpcUrls
+                42161:CHAIN_INFO[CHAIN_ARBI_ONE].rpcUrls[0]
+            }
+            break;
+        case CHAIN_ARBI_TEST:
+            rpcOption = {
+                421613:CHAIN_INFO[CHAIN_ARBI_TEST].rpcUrls[0]
             }
             break;
     
         default:
             rpcOption = {
-                280:CHAIN_INFO[CHAIN_ZKTEST].rpcUrls
+                280:CHAIN_INFO[CHAIN_ZKTEST].rpcUrls[0]
             }
             break;
     }
@@ -108,7 +118,7 @@ async function onConnect() {
     
         provider.on("chainChanged", (chainId) => {
             fetchAccountData();
-            // window.location.reload();
+            window.location.reload();
         });
     
         provider.on("networkChanged", (networkId) => {
@@ -144,6 +154,8 @@ const Header = (props) => {
     const [acc,setacc] = useState()
     const [accountid, setaccountid] = useState();
     const [web3, setWeb3] = useState();
+    const [activeSubLink, setActiveSubLink] = useState();
+    const [chainId, setChainId] = useState();
     
     // iniit web3 provider
     useEffect(async () => {
@@ -165,6 +177,7 @@ const Header = (props) => {
     useEffect(() => {
         init();
         props.setChainId(chainIdSaved);
+        setChainId(chainIdSaved);
         getAccount();
         if (web3Modal.cachedProvider) {
             setacc(true)
@@ -180,7 +193,7 @@ const Header = (props) => {
     
         provider.on("chainChanged", (chainId) => {
             fetchAccountData();
-            // window.location.reload();
+            window.location.reload();
         });
     
         provider.on("networkChanged", (networkId) => {
@@ -191,7 +204,6 @@ const Header = (props) => {
     async function getAccount() {
         // const web3_2 = new Web3(window.ethereum, null, { transactionConfirmationBlocks: 1 })
         if (window.ethereum) {
-            console.log(CHAIN_INFO[chainIdSaved].chainId);
             // request change chain
             try {
                 await window.ethereum.request({
@@ -286,18 +298,18 @@ const Header = (props) => {
                                     <ul id="menu-primary-menu" className="menu">
                                         {
                                             menus.map((data,index) => (
-                                                <li key={index} onClick={()=> handleOnClick(index)} className={`menu-item ${data.namesub ? 'menu-item-has-children' : '' } ${activeIndex === index ? 'active' : ''} ` }   >
-                                                    <Link to={data.links}>{data.name}</Link>
+                                                <li key={index} onClick={()=> handleOnClick(index)} className={`menu-item ${data.namesub ? 'menu-item-has-children' : '' } ${activeIndex === index ? 'active' : ''} ${data.id ==6 ? 'menu-item-chain' : '' }` } >
+                                                    <Link to={data.links}>{data.id == 6 ? chainId && <span style={{color:"#baff00"}}>{CHAIN_INFO[chainId].chainName}</span> : data.name}</Link>
                                                     {
                                                          data.namesub &&
                                                          <ul className="sub-menu" >
                                                             {
                                                                 data.namesub.map((submenu) => (
                                                                     <li key={submenu.id} className={
-                                                                        pathname === submenu.links
+                                                                        chainId && chainId === submenu.chainId
                                                                         ? "menu-item current-item"
                                                                         : "menu-item"
-                                                                    }><Link to={submenu.links}>{submenu.sub}</Link></li>
+                                                                    }>{data.id == 6 ? <Link to="#" onClick={() => {changeChain(submenu.chainId);}}>{submenu.sub}</Link> : <Link to={submenu.links}>{submenu.sub}</Link>}</li>
                                                                 ))
                                                             }
                                                         </ul>
@@ -307,42 +319,42 @@ const Header = (props) => {
                                             ))
                                         }
                                     </ul>                                    
-                                </nav>     
-                                {/* <nav id="chain-nav" className="main-nav" >
-                                    <ul id="menu-primary-menu" className="menu">
-                                        {
-                                            menuChains.map((data,index) => (
-                                                <li key={index} onClick={()=> handleOnClick(index)} className={`menu-item ${data.namesub ? 'menu-item-has-children' : '' } ${activeIndex === index ? 'active' : ''} ` }   >
-                                                    <Link to={data.links}>{data.name}</Link>
-                                                    {
-                                                         data.namesub &&
-                                                         <ul className="sub-menu" >
-                                                            {
-                                                                data.namesub.map((submenu) => (
-                                                                    <li key={submenu.id} className={
-                                                                        pathname === submenu.links
-                                                                        ? "menu-item current-item"
-                                                                        : "menu-item"
-                                                                    }><Link to="#" onClick={() => {changeChain(submenu.chainId);}}>{submenu.sub}</Link></li>
-                                                                ))
-                                                            }
-                                                        </ul>
-                                                    }
-                                                    
-                                                </li>
-                                            ))
-                                        }
-                                    </ul>                                    
-                                </nav>                              */}
+                                </nav>                                
                          
                                 <div className="flat-search-btn flex">
+                                    {/* <div className="main-nav" >
+                                        <ul id="menu-primary-menu" className="menu">
+                                            {
+                                                menuChains.map((data,index) => (
+                                                    <li key={index} onClick={()=> handleOnClick(index)} className={`menu-item ${data.namesub ? 'menu-item-has-children' : '' } ${activeIndex === index ? 'active' : ''} ` }   >
+                                                        <Link to={data.links}>{data.name}</Link>
+                                                        {
+                                                            data.namesub &&
+                                                            <ul className="sub-menu" >
+                                                                {
+                                                                    data.namesub.map((submenu) => (
+                                                                        <li key={submenu.id} className={
+                                                                            pathname === submenu.links
+                                                                            ? "menu-item current-item"
+                                                                            : "menu-item"
+                                                                        }><Link to="#" onClick={() => {changeChain(submenu.chainId);}}>{submenu.sub}</Link></li>
+                                                                    ))
+                                                                }
+                                                            </ul>
+                                                        }
+                                                        
+                                                    </li>
+                                                ))
+                                            }
+                                        </ul>                                    
+                                    </div> */}
                                 {
                                     accountid ?
                                     <div>
                                         <a onClick={()=> setModalShow(true)}>
                                             <span className='fs-16 user-data'>
                                                 {accountid?.substr(0, 6) + '....' + accountid?.substr(accountid?.length - 4, accountid?.length)}
-                                                <img className='avatar-header mg-l-8' src="/assets/images/avt-4.jpg" alt="" />
+                                                <img className='avatar-header mg-l-8' src="/assets/images/icon_default.svg" alt="" />
                                             </span>
                                         </a>                                        
                                     </div>

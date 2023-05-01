@@ -4,7 +4,7 @@ import fromExponential from 'from-exponential';
 
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
-import { NFTAddr, DevWallet, IPFS_BASE_URL, VIDEO_TYPE, IMAGE_TYPE, AUDIO_TYPE } from '../config/constants'
+import { NFTAddr, DevWallet, IPFS_BASE_URL, VIDEO_TYPE, IMAGE_TYPE, AUDIO_TYPE, CHAIN_INFO } from '../config/constants'
 import { getCanonicalPath, getGasPrice } from '../utils/utils';
 
 const NftDetails = () => {
@@ -186,7 +186,7 @@ const NftDetails = () => {
     }
 
     const buyAuctionNft = async (tokenid) => {
-        
+
         if (Number(aucBuyPrice) * 1000000000000000000 * 1.02 / 1000000000000000000 > (Number(mybalance) + 0.003)) return false;
 
         if (web3Api) {
@@ -371,7 +371,7 @@ const NftDetails = () => {
                                     <span>
                                         <img src="/assets/images/zk/eth.svg" alt="" />
                                     </span>
-                                    {listPrice} ETH
+                                    {listPrice} {chainId && CHAIN_INFO[chainId].nativeCurrency.symbol}
                                 </p>
                             </div>
                             <div className="productDetails__inner-info-text">
@@ -383,7 +383,7 @@ const NftDetails = () => {
                                     <span>
                                         <img src="/assets/images/zk/eth.svg" alt="" />
                                     </span>
-                                    {Number(listPrice) * 1000000000000000000 * 0.015 / 1000000000000000000} ETH
+                                    {Number(listPrice) * 1000000000000000000 * 0.015 / 1000000000000000000} {chainId && CHAIN_INFO[chainId].nativeCurrency.symbol}
                                 </p>
                             </div>
                             <div className="productDetails__inner-info-text">
@@ -395,7 +395,7 @@ const NftDetails = () => {
                                     <span>
                                         <img src="/assets/images/zk/eth.svg" alt="" />
                                     </span>
-                                    {Number(listPrice) * 1000000000000000000 * 0.05 / 1000000000000000000} ETH
+                                    {Number(listPrice) * 1000000000000000000 * 0.05 / 1000000000000000000} {chainId && CHAIN_INFO[chainId].nativeCurrency.symbol}
                                 </p>
                             </div>
                             <div className="productDetails__inner-info-total">
@@ -406,7 +406,7 @@ const NftDetails = () => {
                                     <span>
                                         <img src="/assets/images/zk/eth.svg" alt="" />
                                     </span>
-                                    {Number(listPrice) * 1000000000000000000 * 1.02 / 1000000000000000000} ETH
+                                    {Number(listPrice) * 1000000000000000000 * 1.02 / 1000000000000000000} {chainId && CHAIN_INFO[chainId].nativeCurrency.symbol}
                                 </p>
                             </div>
                             <div className="productDetails__inner-info-pay">
@@ -415,7 +415,7 @@ const NftDetails = () => {
                                         <img src="/assets/images/zk/eth.svg" alt="" />
                                     </span>
                                     <h5>
-                                        Pay in ETH
+                                        Pay in {chainId && CHAIN_INFO[chainId].nativeCurrency.symbol}
                                     </h5>
                                 </div>
                                 <p>

@@ -54,6 +54,9 @@ const Collections = () => {
 
     useEffect(() => {
         if (web3Api) {
+            if (colList > 0) setColCnt(1);
+            else setColCnt(0);
+
             for (let i = 1; i <= colList; i++) {
                 getCollectionDetails(i);
             }
@@ -75,7 +78,7 @@ const Collections = () => {
     }
 
     const makeAllColList = (data) => {
-        setColCnt(1);
+        
         setAllColData((old) => [
             ...old, data
         ])

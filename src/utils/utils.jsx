@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import Web3 from "web3"
 import fromExponential from "from-exponential";
 import { Provider } from "zksync-web3";
-import { CHAIN_ARBI_ONE, CHAIN_BSC, CHAIN_INFO, CHAIN_ZKMAIN, CHAIN_ZKTEST } from "../config/constants";
+import { CHAIN_ARBI_ONE, CHAIN_ARBI_TEST, CHAIN_BSC, CHAIN_BSC_TEST, CHAIN_INFO, CHAIN_ZKMAIN, CHAIN_ZKTEST } from "../config/constants";
 
 export const getGasPrice = async () => {
 
@@ -12,7 +12,7 @@ export const getGasPrice = async () => {
     let gasPriceInUnits;
     let web3;
 
-    switch (chainSavedId) {
+    switch (Number(chainSavedId)) {
         case CHAIN_ZKTEST:
             // const signer = (new Web3Provider(window.ethereum)).getSigner();
             provider = new Provider('https://testnet.era.zksync.dev');
@@ -28,16 +28,27 @@ export const getGasPrice = async () => {
             break;
             
         case CHAIN_ARBI_ONE:
-            web3 = new Web3(new Web3.providers.HttpProvider(CHAIN_INFO[CHAIN_ARBI_ONE].rpcUrls));
+            web3 = new Web3(new Web3.providers.HttpProvider(CHAIN_INFO[CHAIN_ARBI_ONE].rpcUrls[0]));
             gasPriceInUnits = await web3.eth.getGasPrice();
             gasPriceNumber = fromExponential(parseFloat(ethers.utils.formatUnits(gasPriceInUnits, 9)) * Math.pow(10, 9));
             break;
-        
-        case CHAIN_BSC:
-            web3 = new Web3(new Web3.providers.HttpProvider(CHAIN_INFO[CHAIN_BSC].rpcUrls));
+        case CHAIN_ARBI_TEST:
+            web3 = new Web3(new Web3.providers.HttpProvider(CHAIN_INFO[CHAIN_ARBI_TEST].rpcUrls[0]));
             gasPriceInUnits = await web3.eth.getGasPrice();
             gasPriceNumber = fromExponential(parseFloat(ethers.utils.formatUnits(gasPriceInUnits, 9)) * Math.pow(10, 9));
-            break;            
+            console.log(CHAIN_ARBI_TEST);
+            break;
+        
+        case CHAIN_BSC:
+            web3 = new Web3(new Web3.providers.HttpProvider(CHAIN_INFO[CHAIN_BSC].rpcUrls[0]));
+            gasPriceInUnits = await web3.eth.getGasPrice();
+            gasPriceNumber = fromExponential(parseFloat(ethers.utils.formatUnits(gasPriceInUnits, 9)) * Math.pow(10, 9));
+            break;     
+        case CHAIN_BSC_TEST:
+            web3 = new Web3(new Web3.providers.HttpProvider(CHAIN_INFO[CHAIN_BSC_TEST].rpcUrls[0]));
+            gasPriceInUnits = await web3.eth.getGasPrice();
+            gasPriceNumber = fromExponential(parseFloat(ethers.utils.formatUnits(gasPriceInUnits, 9)) * Math.pow(10, 9));            
+            break;       
     
         default:
             // const signer = (new Web3Provider(window.ethereum)).getSigner();

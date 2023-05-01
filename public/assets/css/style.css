@@ -1637,6 +1637,11 @@ header{
     transform        : translateY(-50%);
 }
 
+.menu-item-chain {
+  margin-left: 30px;
+  color: #47A432;
+}
+
 /* Sub Menu */
 
 .main-nav .sub-menu {
