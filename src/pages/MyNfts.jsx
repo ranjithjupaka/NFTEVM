@@ -68,7 +68,6 @@ const MyNFTs = () => {
         if (web3Api) {
             for (let i = 0; i < parseInt(_balance); i++) {
                 let nftId = await nftContract.methods.tokenOfOwnerByIndex(currentAccount, i).call({ from: currentAccount });
-                console.log(' -- nftId -- ', nftId);
                 if (nftId) {
                     nftInfo(nftId);
                 }

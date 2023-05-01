@@ -45,8 +45,8 @@ const NFTs = () => {
 
     useEffect(async () => {
         if (nftContract) {
-            // saleNft(0);
             totalcolection();
+            getTotalNftCount();
         }
     }, [nftContract])
 
@@ -151,6 +151,13 @@ const NFTs = () => {
     //             })
     //     }
     // }
+
+    const getTotalNftCount = async () => {
+        if (web3Api) {
+            const totalNftCnt = await nftContract.methods.tokenidmint().call();
+            setNftcnt(Number(totalNftCnt));
+        }
+    }
     
     const totalcolection = async () => {
         if (web3Api) {
@@ -216,7 +223,6 @@ const NFTs = () => {
     }
 
     const saveAllFixedSaleList = (data) => {
-        setNftcnt(1);
         setAllFixedSale((old) => [
             ...old, data
         ])

@@ -61,7 +61,7 @@ const NftDetails = () => {
                 auctionDetail(nftid)
                 timer(nftid)
                 nftInfo(nftid)
-                auctionState(nftid)
+                // auctionState(nftid)
                 owner(nftid)
             }
         }
@@ -82,7 +82,11 @@ const NftDetails = () => {
                 .then((result) => {
                     setBuyPrice((Number(result[3])) / 1000000000000000000);
                     setAucBuyPrice(((Number(result[2])) / 1000000000000000000));
-                    setListPrice((Number(result[3])) / 1000000000000000000);
+                    if (((Number(result[2])) / 1000000000000000000) > 0) {
+                        setListPrice((Number(result[2])) / 1000000000000000000);
+                    } else {
+                        setListPrice((Number(result[3])) / 1000000000000000000);
+                    }                    
                 })
                 .catch()
         }
@@ -127,7 +131,9 @@ const NftDetails = () => {
                 .then((result) => {
                     setAucStat(result)
                 })
-                .catch()
+                .catch((err) => {
+                    console.log(err);
+                })
         }
     }
 
@@ -179,13 +185,16 @@ const NftDetails = () => {
         }
     }
 
-    const buyAuctionNft = async (tokenid, amount) => {
+    const buyAuctionNft = async (tokenid) => {
+        
+        if (Number(aucBuyPrice) * 1000000000000000000 * 1.02 / 1000000000000000000 > (Number(mybalance) + 0.003)) return false;
+
         if (web3Api) {
             setShow(true)
             setBtnName("buyauc");
 
             const gasPriceNumber = await getGasPrice();
-            let amountIn = web3Api.utils.toBN(fromExponential(((parseFloat(amount)) * Math.pow(10, 18))));
+            let amountIn = web3Api.utils.toBN(fromExponential(((parseFloat(aucBuyPrice)) * Math.pow(10, 18))));            
 
             nftContract.methods.buyauction(tokenid).send({ from: currentAccount, value: amountIn, gasPrice: gasPriceNumber })
                 .then((recipt) => {
@@ -265,7 +274,6 @@ const NftDetails = () => {
         if (web3Api) {
             nftContract.methods.nftinformation(id).call({ from: currentAccount })
                 .then((result) => {
-                    // console.log('NFT data -- ', result);
                     setNftData(result);
                     getCollectionDetails(result[7]);
                 }).catch()
@@ -357,13 +365,13 @@ const NftDetails = () => {
                             </div>
                             <div className="productDetails__inner-info-text">
                                 <h5>
-                                    List Price
+                                    {aucBuyPrice > 0 ? "Auction Min Price" : "List Price"}
                                 </h5>
                                 <p>
                                     <span>
                                         <img src="/assets/images/zk/eth.svg" alt="" />
                                     </span>
-                                    {listPrice}
+                                    {listPrice} ETH
                                 </p>
                             </div>
                             <div className="productDetails__inner-info-text">
@@ -375,7 +383,7 @@ const NftDetails = () => {
                                     <span>
                                         <img src="/assets/images/zk/eth.svg" alt="" />
                                     </span>
-                                    {Number(listPrice) * 1000000000000000000 * 0.015 / 1000000000000000000}
+                                    {Number(listPrice) * 1000000000000000000 * 0.015 / 1000000000000000000} ETH
                                 </p>
                             </div>
                             <div className="productDetails__inner-info-text">
@@ -387,7 +395,7 @@ const NftDetails = () => {
                                     <span>
                                         <img src="/assets/images/zk/eth.svg" alt="" />
                                     </span>
-                                    {Number(listPrice) * 1000000000000000000 * 0.05 / 1000000000000000000}
+                                    {Number(listPrice) * 1000000000000000000 * 0.05 / 1000000000000000000} ETH
                                 </p>
                             </div>
                             <div className="productDetails__inner-info-total">
@@ -398,7 +406,7 @@ const NftDetails = () => {
                                     <span>
                                         <img src="/assets/images/zk/eth.svg" alt="" />
                                     </span>
-                                    {Number(listPrice) * 1000000000000000000 * 1.02 / 1000000000000000000}
+                                    {Number(listPrice) * 1000000000000000000 * 1.02 / 1000000000000000000} ETH
                                 </p>
                             </div>
                             <div className="productDetails__inner-info-pay">
@@ -417,7 +425,7 @@ const NftDetails = () => {
                                     <img src="/assets/images/zk/arrow-down.svg" alt="" />
                                 </div>
                             </div>
-                            {Number(listPrice) * 1000000000000000000 * 1.02 / 1000000000000000000 > (Number(mybalance) + 0.002) &&
+                            {(aucBuyPrice > 0 ? Number(aucBuyPrice) * 1000000000000000000 * 1.02 / 1000000000000000000 : Number(listPrice) * 1000000000000000000 * 1.02 / 1000000000000000000) > (Number(mybalance) + 0.003) &&
                                 <p>
                                     <span>
                                         <img src="/assets/images/zk/infoYellow.svg" alt="" />
@@ -481,10 +489,10 @@ const NftDetails = () => {
                                     : null
                             }
 
-                            <form onSubmit={(e) => { e.preventDefault() ; buyAuctionNft(nftData[0], aucBuyPrice); }}>
+                            <form onSubmit={(e) => { e.preventDefault() ; buyAuctionNft(nftData[0]); }}>
                                 {openBid ?
                                     <div className="productDetails__inner-info-text">
-                                        <input style={{ border: 'none', outline: 'none' }} type="Number" placeholder="Enter bid value" step="any" min={aucBuyPrice > aucOwner?.val ? aucBuyPrice : aucOwner?.val} onChange={(e) => setAucBuyPrice(e.target.value)} required /> 
+                                        <input type="Number" placeholder="Enter bid value" step="any" min={aucBuyPrice > aucOwner?.val ? aucBuyPrice : aucOwner?.val} onBlur={(e) => setAucBuyPrice(Number(e.target.value))} required /> 
                                     </div>: null
                                 }
                                 {openBid ?

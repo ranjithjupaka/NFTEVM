@@ -42,15 +42,15 @@ const MyCollections = () => {
     const getMyCollections = async () => {
         if (web3Api) {
             nftContract.methods.totalcollectiondetails().call({ from: currentAccount })
-                .then((result) => {                    
-                    for (let i = 0; i < result?.length; i++) {
-                        getCollectionDetails(result[i]);
-                    }
-                })
-                .catch((err) => {
-                    console.log('ererr', err)
-                })
-
+            .then((result) => {     
+                if (result?.length == 0) setColcnt(0);                                   
+                for (let i = 0; i < result?.length; i++) {
+                    getCollectionDetails(result[i]);
+                }
+            })
+            .catch((err) => {
+                console.log('ererr', err)
+            })
         }
     }
 
