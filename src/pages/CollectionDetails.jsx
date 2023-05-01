@@ -204,7 +204,7 @@ const CollectionDetails = () => {
                             </div>
                             <div className="productInfo__inner-details-social">
                                 <div className="productInfoSocials">
-                                <a href="#" className="button--social" target='_blank'>
+                                <a href="https://discord.gg/YUBcETkpAT" className="button--social" target='_blank'>
                                     <span>
                                         <img src="/assets/images/zk/discord.svg" alt="" />
                                     </span>
