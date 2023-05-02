@@ -146,7 +146,7 @@ const CreateCollection = () => {
                     <div className="creatCollection__inner">
                         <div className="creatCollection__inner-image">
                             <div className="ratioImage">
-                                {displayImage ? <img src={displayImage} alt="" /> : <img src="/assets/images/default.jpg" style={{ objectFit: 'contain', width: '100%' }} />}
+                                {displayImage ? <img src={displayImage} alt="" /> : <img src="/assets/images/default_img.png" style={{ width: '100%', borderRadius:8 }} />}
                             </div>
                         </div>
                         <div className="creatCollection__inner-form" onSubmit={submit} style={{paddingBottom: 60}}>
