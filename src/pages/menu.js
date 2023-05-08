@@ -28,9 +28,9 @@ const menus = [
     },
     {
         id: 6,
-        name: 'ZkSync Testnet',
+        name: 'Bsc Testnet',
         links: '#',
-        chainId: CHAIN_ZKTEST,
+        chainId: CHAIN_BSC_TEST,
         namesub: [
             // {
             //     id: 1,
@@ -38,12 +38,12 @@ const menus = [
             //     links: '#',
             //     chainId: CHAIN_ZKMAIN,
             // },
-            {
-                id: 2,
-                sub: 'Bsc Testnet',
-                links: '#',
-                chainId: CHAIN_BSC_TEST
-            },
+            // {
+            //     id: 2,
+            //     sub: 'Bsc Testnet',
+            //     links: '#',
+            //     chainId: CHAIN_BSC_TEST
+            // },
             // {
             //     id: 3,
             //     sub: 'Arbitrum Testnet',
