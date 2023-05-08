@@ -288,8 +288,7 @@ const Header = (props) => {
                                 <div id="site-logo" className="clearfix">
                                     <div id="site-logo-inner">
                                         <Link to="/" rel="home" className="main-logo">
-                                            <img id="logo_header" style={{height:40}} src={'../../assets/images/logo/logo.png'} srcSet={`${logodark2x}`} alt="Sea Pro" />
-                                            <img id="logo_header" style={{height:40}} src={'../../assets/images/logo/logo.png'} srcSet={`${logoheader2x}`} alt="Sea Pro" />
+                                            <img id="logo_header" style={{height:40}} src={'../../assets/images/logo/logo.png'} alt="Sea Pro" />
                                         </Link>
                                     </div>
                                 </div>

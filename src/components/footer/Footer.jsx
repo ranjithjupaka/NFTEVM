@@ -61,9 +61,7 @@ const Footer = () => {
                             <div className="widget widget-logo">
                                 <div className="logo-footer" id="logo-footer">
                                     <Link to="/">
-                                        <img  style={{height:72}} src={'../../assets/images/logo/logo.png'} alt="nft-gaming" />
-                                        <img  style={{height:72}} src={'../../assets/images/logo/logo.png'} alt="nft-gaming" />
-                                        
+                                        <img  src={'../../assets/logo/logo2.png'} alt="nft-gaming" />                                      
                                     </Link>
                                 </div>
                                 <p className="sub-widget-logo">ZkSea Pro©Copyright 2023</p>
