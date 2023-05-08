@@ -44,18 +44,18 @@ const menus = [
                 links: '#',
                 chainId: CHAIN_BSC_TEST
             },
-            {
-                id: 3,
-                sub: 'Arbitrum Testnet',
-                links: '#',
-                chainId: CHAIN_ARBI_TEST
-            },
-            {
-                id: 4,
-                sub: 'ZkSync Testnet',
-                links: '#',
-                chainId: CHAIN_ZKTEST,
-            },
+            // {
+            //     id: 3,
+            //     sub: 'Arbitrum Testnet',
+            //     links: '#',
+            //     chainId: CHAIN_ARBI_TEST
+            // },
+            // {
+            //     id: 4,
+            //     sub: 'ZkSync Testnet',
+            //     links: '#',
+            //     chainId: CHAIN_ZKTEST,
+            // },
         ],
     }
 ]

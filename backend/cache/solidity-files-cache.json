@@ -1,0 +1,53 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "D:\\Freelance project\\NFTEvm\\backend\\contracts\\ZkSeaNFT.sol": {
+      "lastModificationDate": 1683535676833,
+      "contentHash": "c4a99f60b93ebb55ed3e0381732c883b",
+      "sourceName": "contracts/ZkSeaNFT.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Address",
+        "Context",
+        "ERC165",
+        "ERC721",
+        "ERC721Enumerable",
+        "IERC165",
+        "IERC20",
+        "IERC721",
+        "IERC721Enumerable",
+        "IERC721Metadata",
+        "IERC721Receiver",
+        "SafeMath",
+        "Strings",
+        "ZkSeaNFT"
+      ]
+    }
+  }
+}
