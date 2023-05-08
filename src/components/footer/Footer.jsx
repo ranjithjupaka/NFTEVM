@@ -61,8 +61,8 @@ const Footer = () => {
                             <div className="widget widget-logo">
                                 <div className="logo-footer" id="logo-footer">
                                     <Link to="/">
-                                        <img className='logo-dark' style={{height:72}} src={'../../assets/images/logo/logo.png'} alt="nft-gaming" />
-                                        <img className='logo-light' style={{height:72}} src={'../../assets/images/logo/logo.png'} alt="nft-gaming" />
+                                        <img  style={{height:72}} src={'../../assets/images/logo/logo.png'} alt="nft-gaming" />
+                                        <img  style={{height:72}} src={'../../assets/images/logo/logo.png'} alt="nft-gaming" />
                                         
                                     </Link>
                                 </div>

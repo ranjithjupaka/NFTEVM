@@ -288,8 +288,8 @@ const Header = (props) => {
                                 <div id="site-logo" className="clearfix">
                                     <div id="site-logo-inner">
                                         <Link to="/" rel="home" className="main-logo">
-                                            <img className='logo-dark'  id="logo_header" style={{height:40}} src={'../../assets/images/logo/logo.png'} srcSet={`${logodark2x}`} alt="Sea Pro" />
-                                            <img className='logo-light'  id="logo_header" style={{height:40}} src={'../../assets/images/logo/logo.png'} srcSet={`${logoheader2x}`} alt="Sea Pro" />
+                                            <img id="logo_header" style={{height:40}} src={'../../assets/images/logo/logo.png'} srcSet={`${logodark2x}`} alt="Sea Pro" />
+                                            <img id="logo_header" style={{height:40}} src={'../../assets/images/logo/logo.png'} srcSet={`${logoheader2x}`} alt="Sea Pro" />
                                         </Link>
                                     </div>
                                 </div>
@@ -354,7 +354,7 @@ const Header = (props) => {
                                         <a onClick={()=> setModalShow(true)}>
                                             <span className='fs-16 user-data'>
                                                 {accountid?.substr(0, 6) + '....' + accountid?.substr(accountid?.length - 4, accountid?.length)}
-                                                <img className='avatar-header mg-l-8' src={'../../assets/images/logo/logo2.png'} alt="" />
+                                                <img src={'../../assets/images/logo/logo2.png'} alt="" />
                                             </span>
                                         </a>                                        
                                     </div>
