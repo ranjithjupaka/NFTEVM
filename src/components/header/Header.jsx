@@ -7,12 +7,10 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import Web3 from "web3"
 
 import menus from "../../pages/menu";
-import menuChains from "../../pages/menuChains";
 import DarkMode from './DarkMode';
-import logoheader from '../../assets/images/logo/logo.svg'
-import logoheader2x from '../../assets/images/logo/logo.svg'
-import logodark from '../../assets/images/logo/logo.svg'
-import logodark2x from '../../assets/images/logo/logo.svg'
+import logo from '../../assets/images/logo/logo.png'
+import logo2 from '../../assets/images/logo/logo2.png'
+
 import { CHAIN_ARBI_ONE, CHAIN_ARBI_TEST, CHAIN_BSC, CHAIN_BSC_TEST, CHAIN_INFO, CHAIN_ZKMAIN, CHAIN_ZKTEST } from '../../config/constants';
 
 let web3Modal;
@@ -25,10 +23,10 @@ function init() {
     if (localStorage) {
         chainIdSaved = localStorage.getItem('nftzksea-chainId');
         if (chainIdSaved == undefined || chainIdSaved == "undefined") {
-            chainIdSaved = CHAIN_ZKTEST;
+            chainIdSaved = CHAIN_BSC_TEST;
         }   
     } else {
-        chainIdSaved = CHAIN_ZKTEST;
+        chainIdSaved = CHAIN_BSC_TEST;
     }
     
     let rpcOption = {};
@@ -288,7 +286,7 @@ const Header = (props) => {
                                 <div id="site-logo" className="clearfix">
                                     <div id="site-logo-inner">
                                         <Link to="/" rel="home" className="main-logo">
-                                            <img id="logo_header" style={{height:40}} src={'../../assets/images/logo/logo.png'} alt="Sea Pro" />
+                                            <img id="logo_header" style={{height:40}} src={logo} alt="Pepe Super Grow" />
                                         </Link>
                                     </div>
                                 </div>
@@ -353,12 +351,12 @@ const Header = (props) => {
                                         <a onClick={()=> setModalShow(true)}>
                                             <span className='fs-16 user-data'>
                                                 {accountid?.substr(0, 6) + '....' + accountid?.substr(accountid?.length - 4, accountid?.length)}
-                                                <img src={'../../assets/images/logo/logo2.png'} alt="" />
+                                                <img style={{height:30}} src={logo2} alt="" />
                                             </span>
                                         </a>                                        
                                     </div>
                                     :
-                                    <div className="sc-btn-top mg-r-12" id="site-header">
+                                    <div className="sc-btn-top mg-r-15" id="site-header" style={{marginLeft:"20px"}}>
                                         <button onClick={()=> onConnect()} className="button--primary header-slider style style-1 wallet fl-button pri-1">
                                             <span>Wallet Connect</span>
                                         </button>

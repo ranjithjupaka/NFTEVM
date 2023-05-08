@@ -3,9 +3,9 @@ import { CHAIN_ARBI_ONE, CHAIN_BSC, CHAIN_ZKMAIN, CHAIN_ZKTEST } from "../config
 const menuChains = [    
     {
         id: 1,
-        name: 'ZkSync Testnet',
+        name: 'Bsc Testnet',
         links: '#',
-        chainId: CHAIN_ZKTEST,
+        chainId: CHAIN_BSC,
         namesub: [
             {
                 id: 1,

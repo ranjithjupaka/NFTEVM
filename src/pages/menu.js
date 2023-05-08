@@ -31,7 +31,7 @@ const menus = [
         name: 'Bsc Testnet',
         links: '#',
         chainId: CHAIN_BSC_TEST,
-        namesub: [
+        // namesub: [
             // {
             //     id: 1,
             //     sub: 'ZkSync Mainnet',
@@ -56,7 +56,7 @@ const menus = [
             //     links: '#',
             //     chainId: CHAIN_ZKTEST,
             // },
-        ],
+        // ],
     }
 ]
 

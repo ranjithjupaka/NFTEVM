@@ -1,7 +1,6 @@
 import React, { useState ,useEffect } from 'react';
 import { Link } from 'react-router-dom'
-import logodark from '../../assets/images/logo/logo.svg'
-import logofooter from '../../assets/images/logo/logo.svg'
+import logo from '../../assets/images/logo/logo2.png'
 const Footer = () => {
 
     const resourcesList = [
@@ -61,16 +60,16 @@ const Footer = () => {
                             <div className="widget widget-logo">
                                 <div className="logo-footer" id="logo-footer">
                                     <Link to="/">
-                                        <img  src={'../../assets/logo/logo2.png'} alt="nft-gaming" />                                      
+                                        <img  src={logo} alt="Pepe Super Grow" />                                      
                                     </Link>
                                 </div>
-                                <p className="sub-widget-logo">ZkSea Pro©Copyright 2023</p>
+                                <p className="sub-widget-logo">Pepe Super Grow©Copyright 2023</p>
                             </div>
                         </div>
                         
                         <div className="col-lg-4 col-md-4 col-sm-5 col-5">
                             <div className="widget widget-menu fl-st-3">
-                                <h3 className="title-widget">ZK Sea Pro</h3>
+                                <h3 className="title-widget">Pepe Super Grow</h3>
                                 <ul style={{color:"white"}}>
                                     {
                                         resourcesList.map((item,index) =>(
