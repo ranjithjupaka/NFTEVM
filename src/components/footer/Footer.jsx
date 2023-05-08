@@ -61,8 +61,8 @@ const Footer = () => {
                             <div className="widget widget-logo">
                                 <div className="logo-footer" id="logo-footer">
                                     <Link to="/">
-                                        <img className='logo-dark' style={{height:72}} src={logodark} alt="nft-gaming" />
-                                        <img className='logo-light' style={{height:72}} src={logofooter} alt="nft-gaming" />
+                                        <img className='logo-dark' style={{height:72}} src={'../../assets/images/logo/logo.png'} alt="nft-gaming" />
+                                        <img className='logo-light' style={{height:72}} src={'../../assets/images/logo/logo.png'} alt="nft-gaming" />
                                         
                                     </Link>
                                 </div>
@@ -95,7 +95,7 @@ const Footer = () => {
                                     <ul>
                                         {
                                             socialList.map((item,index) =>(
-                                                <li key={index}><a href={item.link} target='_blank'><i className={item.icon}></i></a></li>
+                                                <li key={index}><a href={item.link} target='_blank' rel="noreferrer"><i className={item.icon}></i></a></li>
                                             ))
                                         }
                                     </ul>
